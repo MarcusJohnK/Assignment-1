@@ -1,0 +1,41 @@
+
+<!--Marcus Koning, 000852414, October 25, 2022-->
+<?PHP
+include_once "file_storage.php";
+$filename = 'filename.json';
+$data = array("PRODUCT_ID1"=>array("product_id"=>"00001","product_name"=>"Dragon's Vault ETB","product_category"=>"Elite_Trainer_Box",
+                                   "product_description"=>"Dragons Vault Elite Trainer Box. Contains a variety of items that will assist you in the taking off of your pokemon tcg career.","product_price"=>74.99,"product_quantity"=>2),
+              "PRODUCT_ID2"=>array("product_id"=>"00002","product_name"=>"Vivid Voltage ETB","product_category"=>"Elite_Trainer_Box",
+                                   "product_description"=>"Vivid Voltage Elite Trainer Box. Contains a variety of items that will assist you in the taking off of your pokemon tcg career.","product_price"=>71.99,"product_quantity"=>3),
+              "PRODUCT_ID3"=>array("product_id"=>"00003","product_name"=>"Champion's Path ETB","product_category"=>"Elite_Trainer_Box",
+                                   "product_description"=>"Champions Path Elite Trainer Box. Contains a variety of items that will assist you in the taking off of your pokemon tcg career.","product_price"=>72.99,"product_quantity"=>4),
+              "PRODUCT_ID4"=>array("product_id"=>"00004","product_name"=>"Lost Origins ETB","product_category"=>"Elite_Trainer_Box",
+                                   "product_description"=>"Lost Origins Elite Trainer Box. Contains a variety of items that will assist you in the taking off of your pokemon tcg career.","product_price"=>72.99,"product_quantity"=>4),
+              "PRODUCT_ID5"=>array("product_id"=>"00005","product_name"=>"Astral Radiance ETB","product_category"=>"Elite_Trainer_Box",
+                                   "product_description"=>"Astral Radiance Elite Trainer Box. Contains a variety of items that will assist you in the taking off of your pokemon tcg career.","product_price"=>72.99,"product_quantity"=>0),
+              "PRODUCT_ID6"=>array("product_id"=>"00006","product_name"=>"Astral Radiance Blister","product_category"=>"Blister_Packs",
+                                  "product_description"=>"Astral Radiance Pokemon tcg Blister Pack. Contains 10 cards within.","product_price"=>6.99,"product_quantity"=>4),    
+              "PRODUCT_ID7"=>array("product_id"=>"00007","product_name"=>"Lost Origins Blister","product_category"=>"Blister_Packs",
+                                   "product_description"=>"Lost Origins Pokemon tcg Blister Pack. Contains 10 cards within.","product_price"=>6.99,"product_quantity"=>4),
+              "PRODUCT_ID8"=>array("product_id"=>"00008","product_name"=>"Vivid Voltage Blister","product_category"=>"Blister_Packs",
+                                   "product_description"=>"Vivid Voltage Pokemon tcg Blister Pack. Contains 10 cards within.","product_price"=>9.99,"product_quantity"=>4),
+              "PRODUCT_ID9"=>array("product_id"=>"00009","product_name"=>"Dragons Vault Blister","product_category"=>"Blister_Packs",
+                                   "product_description"=>"Dragons Vault Pokemon tcg Blister Pack. Contains 10 cards within.","product_price"=>12.99,"product_quantity"=>0),
+              "PRODUCT_ID10"=>array("product_id"=>"00010","product_name"=>"Jungle Set Blister","product_category"=>"Blister_Packs",
+                                   "product_description"=>"A rare and unique pokemon tcg blister pack. Contains 10 or more cards inside","product_price"=>129.99,"product_quantity"=>4),
+              "PRODUCT_ID11"=>array("product_id"=>"00011","product_name"=>"Astral Radiance B&BB","product_category"=>"Build_&_Battle_Box",
+                                   "product_description"=>"New and Improved BUILD AND BATTLE BOXES! Beat your friends with the all new cards from the ASTRAL RADIANCE Expansion!","product_price"=>21.99,"product_quantity"=>4),
+              "PRODUCT_ID12"=>array("product_id"=>"00012","product_name"=>"Lost Origin B&BB","product_category"=>"Build_&_Battle_Box",
+                                   "product_description"=>"New and Improved BUILD AND BATTLE BOXES! Beat your friends with the all new cards from the LOST ORIGINS Expansion!","product_price"=>21.99,"product_quantity"=>4),
+              "PRODUCT_ID13"=>array("product_id"=>"00013","product_name"=>"Vivid Voltage B&BB","product_category"=>"Build_&_Battle_Box",
+                                   "product_description"=>"New and Improved BUILD AND BATTLE BOXES! Beat your friends with the all new cards from the VIVID VOLTAGE Expansion!","product_price"=>21.99,"product_quantity"=>0),
+              "PRODUCT_ID14"=>array("product_id"=>"00014","product_name"=>"Dragon's Vault B&BB","product_category"=>"Build_&_Battle_Box",
+                                   "product_description"=>"New and Improved BUILD AND BATTLE BOXES! Beat your friends with the all new cards from the DRAGON's VAULT Expansion!","product_price"=>21.99,"product_quantity"=>4),
+              "PRODUCT_ID15"=>array("product_id"=>"00015","product_name"=>"Fusion Strike B&BB","product_category"=>"Build_&_Battle_Box",
+                                   "product_description"=>"New and Improved BUILD AND BATTLE BOXES! Beat your friends with the all new cards from the FUSION STRIKE Expansion!","product_price"=>21.99,"product_quantity"=>4));
+writeDataFile($filename,$data);
+
+if ( file_exists($filename) ){ print "Data File Created! $filename";}
+else { print "Data file not created!";}
+$data = readDataFile('filename.json');
+?>

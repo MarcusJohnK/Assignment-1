@@ -1,0 +1,270 @@
+<!--Marcus Koning, 000852414, October 25, 2022-->
+<?php
+    /*Begins the Session*/
+    session_start();
+    /*Opens filename.json and turns it into an associative array*/
+    $fh = fopen("filename.json", "rb");
+    $data = "";
+    while (!feof($fh)) {
+        $data .= fread($fh, 4096);
+    }
+    fclose($fh);
+    $Products = json_decode($data, true); 
+    /*shopping cart array initialized*/
+    $cart = array();
+?>
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link href="StyleSheet.css" rel="stylesheet" type ="text/css">
+    <title>Document</title>
+</head>
+<body>
+    <!--the header of the webpage, contains Store name and logo-->
+    <header>
+        <h1 class="bg-dark text-center text-white">POKE-STOP!<img src="images/Poke_Ball_icon.png"></h1>
+    </header>
+    <div class="bodyy">
+        <div class="container-fluid">
+        <div class="row justify-content-between center">
+
+            <!--This is the first item within the container, it 
+            contains the buttons Within Product Categories-->
+            <div class ="col-md-2">
+                <h1>PRODUCT CATEGORIES</h1>
+                <div class="bg-black">
+                <form class = "p-2"><input type = "submit" name ="Blister_Packs" value = "Blister Packs"></form>
+                <form class = "p-2"><input type = "submit" name ="Elite_Trainer_Box" value = "Elite Trainer Box"></form>
+                <form class = "p-2"><input type = "submit" name ="Build_&_Battle_Box" value = "Build & Battle Box"></form>
+                <form class = "p-2"><input type = "submit" name ="Everything" value = "Everything"></form>
+                </div>
+            </div>
+
+        <!--This is the Middle Container Item-->
+        <div class ="col-md-5 row-5">
+            <!--Title of the Div-->
+            <h1 class = "alignText">PRODUCT CATALOG</h1>
+                <!--Changes the value of $_SESSION['displayedItems'] depending on
+                which button from the Product Categories was pressed-->
+                <?php
+                $_SESSION['displayedItems'] = '';
+                if(isset($_GET['Blister_Packs'])){
+                    $_SESSION['displayedItems'] = 'Blister_Packs';
+                }
+                if(isset($_GET['Elite_Trainer_Box'])){
+                    $_SESSION['displayedItems'] = 'Elite_Trainer_Box';
+                }
+                if(isset($_GET['Build_&_Battle_Box'])){
+                    $_SESSION['displayedItems'] = 'Build_&_Battle_Box';
+                }
+                if(isset($_GET['Everything'])){
+                    $_SESSION['displayedItems'] = 'Everything';
+                }
+                //if the View Item button within the Catalog hasn't been selected then the 
+                //program displays various items within the product catalog
+                if(!isset($_GET['View_Item'])){
+                    //table headers for the product catalog
+                    echo"<table class = 'table table-dark table-striped'>"; //beginning of table
+                    echo"<tr>";
+                    echo"<th>Product ID</th>";
+                    echo"<th>Product Name</th>";
+                    echo"<th>Product Price</th>";
+                    echo"<th>Product Quantity</th>";
+                    echo"<th></th>";
+                    echo"</tr>";
+                    //if any of the buttons from the Product Categories section or the View_Item Button is
+                    //selected then this peice of code will run
+                    if(isset($_GET['Blister_Packs']) || isset($_GET['Elite_Trainer_Box']) || isset($_GET['Build_&_Battle_Box']) || isset($_GET['View_Item'])){
+                        //only prints out Catalog items if they match with the value given
+                        //by the Product Categories Button
+                        foreach ( $Products as $n ){
+                                if($n["product_category"]  === $_SESSION['displayedItems'])
+                                {
+                                    echo"<tr>";//beginning of the table row
+                                    echo"<td>{$n["product_id"]}</td>";
+                                    echo"<td>{$n["product_name"]}</td>";
+                                    echo"<td>{$n["product_price"]}</td>";
+                                    //checks to see if product Quantity is equal to zero
+                                    //displays information as red if it is
+                                    if($n["product_quantity"] === 0){
+                                        echo"<td class = 'text-warning'>{$n["product_quantity"]}</td>";
+                                        echo"<td class = 'text-warning'> Out of Stock </td>";
+                                    }else{//displays information as normal
+                                    echo"<td>{$n["product_quantity"]}</td>";
+                                    ?>
+                                    <!--the View_Item Button code-->
+                                    <td>
+                                    <form>
+                                    <input type="hidden" name="newValue" value ="<?= $n["product_id"] ?>">
+                                    <input type = "submit" name ="View_Item" value = "View_Item">
+                                    </form>
+                                    </td>
+                
+                                    <?php
+                                    }
+                                    echo"</tr>";//ending of the table row
+                                }
+                            }
+                    }//if none of the buttons from Product Categories have been selected, or the
+                    else{//View Item button, Then this chunck of code outputs all the Catalog information
+                        
+                        //gives Session variable a value if it has not been given one yet
+                        if(!isset($_SESSION['displayedItem'])){
+                            $_SESSION['displayedItem'] = "Elite_Trainer_Box";
+                        }else{
+                            //changes Session variable value if it Previous Button is selected
+                            if(isset($_GET['Previous'])){
+                                if($_SESSION['displayedItem'] === "Build_&_Battle_Box"){
+                                    $_SESSION['displayedItem'] = "Blister_Packs";
+                                }else{
+                                    $_SESSION['displayedItem'] = "Elite_Trainer_Box";
+                                }
+                            }
+                            //changes Session Variable Button if Next is selected
+                            if(isset($_GET['Next'])){
+                                if($_SESSION['displayedItem'] === "Elite_Trainer_Box"){
+                                    $_SESSION['displayedItem'] = "Blister_Packs";
+                                }
+                                else{
+                                    $_SESSION['displayedItem'] = "Build_&_Battle_Box";
+                                }
+                            }
+                        }
+                        //displays Catalog Items if they match the $_SESSION['displayedItem']'s value
+                        foreach ( $Products as $n ){
+                            if($n["product_category"] === $_SESSION['displayedItem']){
+                                echo"<tr>";//table row beginning
+                                echo"<td>{$n["product_id"]}</td>";
+                                echo"<td>{$n["product_name"]}</td>";
+                                echo"<td>{$n["product_price"]}</td>";
+                                //checks to see if product quantity is zero
+                                //if so it turns the text red
+                                if($n["product_quantity"] === 0){
+                                echo"<td class = 'text-warning'>{$n["product_quantity"]}</td>";
+                                echo"<td class = 'text-warning'> Out of Stock </td>"; 
+                                }else{//displays text of product quantity as normal
+                                echo"<td>{$n["product_quantity"]}</td>";
+                                ?>
+                                <!--View Item Button-->
+                                <td>
+                                <form>
+                                <input type="hidden" name="newValue" value ="<?= $n["product_id"] ?>">
+                                <input type = "submit" name ="View_Item" value = "View_Item">
+                                </form>
+                                </td>
+                                <?php
+                                }
+                                echo"</tr>";//table row end
+                            } 
+                        }
+                        
+                        echo"<tr>";
+                        echo"<td>";
+                        //Previous button
+                        //button goes away if its value is Elite_Trainer_Box
+                        if(!($_SESSION['displayedItem'] === "Elite_Trainer_Box")){
+                            echo"<form><input type = 'submit' name ='Previous' value = 'Previous'></form>";
+                        }
+                        echo"</td>";
+                        echo"<td></td>";
+                        echo"<td></td>";
+                        echo"<td></td>";
+                        echo"<td>";
+                        //Next Button
+                        //button goes away if its value is Build_&_Battle_Box
+                        if(!($_SESSION['displayedItem'] === "Build_&_Battle_Box")){
+                            echo"<form><input type = 'submit' name ='Next' value = '  Next  '></form>";
+                        }
+                        echo"</td>";
+                        echo"</tr>";
+                    }
+                    echo'</table>'; // end of table
+                }
+                ?>
+                <!--View Item Table-->
+                <table class = 'table table-dark table-striped'>
+                    <?php
+                    //if view item button has been selected then
+                    //the selected items specs are displayed as a table
+                    if(isset($_GET['View_Item'])){
+                        foreach($Products as $n){
+                            if($_GET['newValue']  === $n["product_id"]){
+                                echo"<tr>";
+                                echo"<td>Product Code</td>";
+                                echo"<td>{$n["product_id"]}</td>";
+                                echo"</tr>";
+
+                                echo"<tr>";
+                                echo"<td>Product Name</td>";
+                                echo"<td>{$n["product_name"]}</td>";
+                                echo"</tr>";
+
+                                echo"<tr>";
+                                echo"<td>Product Description</td>";
+                                echo"<td>{$n["product_description"]}</td>";
+                                echo"</tr>";
+
+                                echo"<tr>";
+                                echo"<td>Product Price</td>";
+                                echo"<td>{$n["product_price"]}</td>";
+                                echo"</tr>";
+                                echo"<tr>";
+                                ?>
+                                <!--the Add Button, adds selected item to shopping cart-->
+                                <td>
+                                <form>
+                                <input type="hidden" name="lose" value ="<?= $n["product_quantity"] = $n["product_quantity"] - 1 ?>"><!--would have been used to decrease the items quantity-->
+                                <input type="hidden" name="add" value ="<?= $n["product_id"] ?>">
+                                <input type = "submit" name ="Add" value = "Add">
+                                </form>
+                                </td>
+                                <td></td>
+                                <?php
+                            }
+                        }  
+                    } 
+                    ?>
+                </table>    
+        </div><!--end of the middle div element-->
+
+        <!--The SHopping Cart-->
+        <div class ="col-md-2"> 
+            <h1>SHOPPING CART</h1>
+            <div class="bg-dark">
+            <?php
+                //if the add button from the product catalog is pressed then add the 
+                //selected item into the cart array
+                if(isset($_GET['Add'])){
+                    //goes through the $Products array until it finds the item that has matching id
+                    //with the value gained from the add button and pushes the items id, name and price
+                    //into an array
+                    foreach($Products as $n){
+                        if($n["product_id"] === $_GET["add"]){
+                            array_push($cart, $n["product_id"], $n["product_name"], $n["product_price"]);
+                        }
+
+                    }
+                //displays shopping cart information
+                echo"<table class='table table-dark table-striped'>";
+                echo"<tr>";
+                for($i = 0; $i < count($cart); $i++){
+                    echo"<td>{$cart[$i]}</td>";
+                }
+                //the remove button within the shoppincart
+                echo"<td><form><input type = 'submit' name ='remove' value = '-'></form></td>";
+                echo"</tr>";
+                echo"</table>";
+            }
+            ?>
+            </div>
+        </div>
+    </div><!-- end of bodyy div-->
+    </div><!--end of container fluid div-->
+    </div><!-- end of row justify-content-between center di-->
+</body>
+</html>
